@@ -2,7 +2,7 @@
  * Created by yaroslav on 03.05.15.
  */
 var warrior = require('./warrior');
-function Paladin(name, health, type, strength, distance, armour,scin,artifact) {
+function Paladin(name, health, type, strength, distance, armour,cells,scin,artifact) {
     warrior.apply(this, arguments);
     this.poison = {
         number: 3,
@@ -22,6 +22,7 @@ Paladin.prototype.fight = function (enemy) {
     this.poison.number>0 ? enemy.health-= this.poison.power: enemy.health-=0;
 
     this.poison.number--;
+    console.log(this.name + ' attack');
 };
 
 module.exports = Paladin;

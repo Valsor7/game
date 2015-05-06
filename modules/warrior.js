@@ -4,7 +4,7 @@
 var Vec = require('./vector.js');
 var Physics = require('./physics');
 
-function Warrior(name, x, y, health, type, strength, armour, distance) {
+function Warrior(name, x, y, health, type, strength, armour, distance, cells) {
     this.name = name;
     this.position = new Vec(x, y);
     this.health  = health;
@@ -12,31 +12,19 @@ function Warrior(name, x, y, health, type, strength, armour, distance) {
     this.strength = strength;
     this.armour = armour;
     this.distance = distance;
+    this.maxCells = cells;
 }
 
-Warrior.prototype.moveTo = function (vecLength) {
+Warrior.prototype.moveTo = function () {
+    var dist = this.maxCells + Physics.wind;
+    dist *=Physics.air;
 
-    if(vecLength.x > 0) {
-        this.position.x += this.distance + Physics.wind.windX;
-    } else {
-        this.position.x -= this.distance + Physics.wind.windX;
-    };
-
-    if(vecLength.y > 0) {
-        this.position.y += this.distance + Physics.wind.windX;
-    } else {
-        this.position.y -= this.distance + Physics.wind.windX;
-    };
-
-    this.position.x*=Physics.air;
-    this.position.y*=Physics.air;
-
-    console.log(this.name + " move to(" + this.position.x + ";" + this.position.y + ")");
-
+    return dist;
 };
 
 Warrior.prototype.fight = function (enemy) {
     enemy.health-= this.strength-enemy.armour>0 ? this.strength-enemy.armour: 0;
+    console.log(this.name + ' attack');
 };
 
 module.exports = Warrior;

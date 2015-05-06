@@ -2,13 +2,9 @@
  * Created by yaroslav on 04.05.15.
  */
 var Physics = {
-    wind : {
-        windX : getRandomInt(-5,5),
-        windY : getRandomInt(-5,5)
-    },
+    wind : getRandomInt(-5,5),
     air : 0.98
-
-}
+};
 
 function getRandomInt(min, max) {
     return parseInt((Math.random() * (max - min)) + min);
