@@ -2,7 +2,6 @@
  * Created by yaroslav on 02.05.15.
  */
 var myMath = require('./myMath.js');
-var Physics = require('./physics');
 
 function Warrior(name, x, y, health, type, strength, armour, distance, cells) {
     this.name = name;
@@ -15,11 +14,23 @@ function Warrior(name, x, y, health, type, strength, armour, distance, cells) {
     this.maxCells = cells;
 }
 
-Warrior.prototype.moveTo = function () {
-    var dist = this.maxCells + Physics.wind;
-    dist *=Physics.air;
+Warrior.prototype.moveTo = function (way) {
 
-    return Math.round(dist);
+    var length = way.length;
+    var turn = global.turn || 1;
+
+    length -= turn === 1 ? 0 : this.maxCells*(turn-1);
+
+    if(length <= this.maxCells){
+        this.position = way[way.length-1];
+        console.log(this.name + " moved to final" + this.position.x + "_" + this.position.y);
+    } else {
+        this.position = way[this.maxCells*turn-1];
+        turn++;
+        global.turn = turn;
+
+        console.log(this.name + " moved to " + this.position.x + "_" + this.position.y);
+    }
 };
 
 Warrior.prototype.fight = function (enemy) {
