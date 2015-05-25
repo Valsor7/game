@@ -7,7 +7,7 @@ var myMath = require('./myMath');
 module.exports.moveFirst = function (hero, x, y) {
 
     var endPos = new myMath.vector(Number(x),Number(y));
-    var heroPos = new myMath.vector(hero.position.x,hero.position.y);
+    var heroPos = new myMath.vector(hero.x,hero.y);
     var way = searchWay(heroPos, endPos);
     global.way = way;
     hero.moveTo(way);

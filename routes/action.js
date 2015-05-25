@@ -38,7 +38,7 @@ actionRouter.get('/:name/fight', function (req, res, next) {
 
 actionRouter.get('/:name/move/:x/:y', function (req, res, next) {
     if(global.way && global.turn){
-        err = new Error("use URL: /heroName/move!");
+        err = new Error("use URL: /heroName/move");
         err.status = 403; // CHANGE Status!
         next(err);
     } else {
@@ -53,7 +53,7 @@ actionRouter.get('/:name/move/:x/:y', function (req, res, next) {
             if (heroName === elem.name) {
                 new movement.moveFirst(elem, x, y);
                 res.status = 200;
-                res.send("Coord: " + elem.position.x + " " + elem.position.y);
+                res.send("Coord: " + elem.x + " " + elem.y);
                 return;
             }
             ;
@@ -63,8 +63,8 @@ actionRouter.get('/:name/move/:x/:y', function (req, res, next) {
 
 actionRouter.get('/:name/move', function (req, res, next) {
     if(!(global.way && global.turn)){
-        err = new Error("can't define new use URL: /heroName/move/x/y ");
-        err.status = 403; // CHANGE Status!
+        err = new Error("use URL: /heroName/move/x/y ");
+        err.status = 403;
         next(err);
     } else {
         var heroName = req.name;
@@ -75,13 +75,14 @@ actionRouter.get('/:name/move', function (req, res, next) {
             if (heroName === elem.name) {
                 new movement.move(elem);
                 res.status = 200;
-                res.send("Coord: " + elem.position.x + " " + elem.position.y);
+                res.send("Coord: " + elem.x + " " + elem.y);
                 return;
             }
             ;
         });
     }
 });
+
 
 function heroExist(name) {
     var isHero = false;

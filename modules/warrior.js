@@ -5,7 +5,8 @@ var myMath = require('./myMath.js');
 
 function Warrior(name, x, y, health, type, strength, armour, distance, cells) {
     this.name = name;
-    this.position = new myMath.vector(x, y);
+    this.x = x;
+    this.y = y;
     this.health  = health;
     this.type = type;
     this.strength = strength;
@@ -18,18 +19,26 @@ Warrior.prototype.moveTo = function (way) {
 
     var length = way.length;
     var turn = global.turn || 1;
-
+    var finalPos;
     length -= turn === 1 ? 0 : this.maxCells*(turn-1);
 
     if(length <= this.maxCells){
-        this.position = way[way.length-1];
-        console.log(this.name + " moved to final" + this.position.x + "_" + this.position.y);
+        finalPos = way[way.length-1];
+        this.x = finalPos.x;
+        this.y = finalPos.y;
+
+        delete global.turn;
+        delete global.way;
+
+        console.log(this.name + " moved to final" + this.x + "_" + this.y);
     } else {
-        this.position = way[this.maxCells*turn-1];
+        finalPos = way[this.maxCells*turn-1];
+        this.x = finalPos.x;
+        this.y = finalPos.y;
         turn++;
         global.turn = turn;
 
-        console.log(this.name + " moved to " + this.position.x + "_" + this.position.y);
+        console.log(this.name + " moved to " + this.x + "_" + this.y);
     }
 };
 

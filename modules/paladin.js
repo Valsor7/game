@@ -2,13 +2,12 @@
  * Created by yaroslav on 03.05.15.
  */
 var warrior = require('./warrior');
-function Paladin(name, x, y, health, type, strength, armour, distance, cells,scin,artifact) {
+function Paladin(name, x, y, health, type, strength, armour, distance, cells, artifact) {
     warrior.apply(this, arguments);
     this.poison = {
         number: 3,
         power : 5
     };
-    this.scin = scin;
     this.artifact = artifact;
 }
 

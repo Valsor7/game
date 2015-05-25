@@ -11,7 +11,7 @@ function fight(heroName) {
     global.heroes.forEach(function (enemy, index, array) {
         if (!(hero.name === enemy.name)) {
             
-            var dist = myMath.scalar(hero.position, enemy.position);
+            var dist = myMath.scalar(myMath.vector(hero.x,hero.y), myMath.vector(enemy.x,enemy.y));
             if(dist <= hero.distance){
                 hero.fight(enemy);
                 if(enemy.health>0) console.log(enemy.name + " health = " + enemy.health);

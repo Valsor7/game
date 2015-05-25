@@ -1,51 +1,40 @@
 var express = require('express');
 var charsRouter = express.Router();
-var warrior = require('../modules/warrior.js');
-var paladin = require('../modules/paladin.js');
+var WarriorModel = require('../models/warrior.js');
+var WarriorModule = require('../modules/warrior.js');
+var PaladinModel = require('../models/paladin.js');
+var PaladinModule = require('../modules/paladin.js');
 var heroes = [];
 var err;
 
-charsRouter.param('charName', function (req, res, next, name) {
-    console.log("NAME!");
-
-    if (heroExist(name)) {
-        err = new Error("Hero with this name already exist");
-        err.status = 400; // CHANGE Status!
-        next(err);
-    } else {
-        req.name = name;
-        next();
-    }
-})
-
 charsRouter.post('/warrior/:charName', function (req, res, next ) {
-    var warrName = req.name;
+    var warrName = req.params.charName;
+    var warriorModule = new WarriorModule(warrName, 200, 300, 100, 'Damage dealer', 50, 30, 30, 5);
+    var warrior = new WarriorModel(warriorModule);
+    warrior.save(function(err, warrior) {
+        if (err) return console.error(err);
+        console.log(warrior);
+    });
 
-    heroes.push(new warrior(warrName, 10, 20, 100, 'Damage dealer', 50, 30, 30, 5));
+    heroes.push(warriorModule);
     global.heroes = heroes;
 
-    res.status(200).send("created warrior " + warrName);
+    res.status(200).send("created warrior " + warrior);
 });
 
 charsRouter.post('/paladin/:charName', function (req, res, next) {
-    var palName = req.name;
-
-    heroes.push(new paladin(palName, 400, 300, 200, "Tank", 80, 20, 40, 10, "White", "God's scroll"));
-    global.heroes = heroes;
-
-    res.status(200).send("created paladin " + palName);
-});
-
-function heroExist(name) {
-    var isHero = false;
-    heroes.forEach(function (elem, index, arr) {
-        if (name === elem.name) {
-            isHero = true;
-            return;
-        };
+    var palName = req.params.charName;
+    var palModule = new PaladinModule(palName, 100, 50, 200, 'Tank', 40, 30, 30, 10, "God's scroll")
+    var paladin = new PaladinModel(palModule);
+    paladin.save(function(err, paladin) {
+        if (err) return console.error(err);
+        console.log(paladin);
     });
 
-    return isHero;
-}
+    heroes.push(palModule);
+    global.heroes = heroes;
+
+    res.status(200).send("created paladin " + paladin);
+});
 
 module.exports = charsRouter;

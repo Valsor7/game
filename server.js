@@ -4,11 +4,20 @@
 var express = require('express');
 var app = express();
 var bodyPars = require('body-parser');
-var router = require('./routes/main.js')(app);
+var mongoose = require('mongoose');
+var url = 'mongodb://localhost/game';
 
+mongoose.connect(url);
+var db = mongoose.connection;
 
-app.listen(3030, function () {
-    console.log('server on port 3030');
+db.once('open', function () {
+    require('./routes/index.js')(app);
+
+    app.listen(3030, function () {
+        console.log('server on port 3030');
+    });
 });
+
+db.on('error', console.error);
 
 
