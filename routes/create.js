@@ -1,40 +1,71 @@
 var express = require('express');
 var charsRouter = express.Router();
 var WarriorModel = require('../models/warrior.js');
-var WarriorModule = require('../modules/warrior.js');
 var PaladinModel = require('../models/paladin.js');
-var PaladinModule = require('../modules/paladin.js');
-var heroes = [];
-var err;
+var bodyParser = require('body-parser');
 
-charsRouter.post('/warrior/:charName', function (req, res, next ) {
-    var warrName = req.params.charName;
-    var warriorModule = new WarriorModule(warrName, 200, 300, 100, 'Damage dealer', 50, 30, 30, 5);
-    var warrior = new WarriorModel(warriorModule);
-    warrior.save(function(err, warrior) {
+charsRouter.use(bodyParser.urlencoded({ extended: false }));
+
+charsRouter.use(bodyParser.json());
+
+//Json object
+//{
+//    "name": "HeroName",
+//    "x": 100,
+//    "y": 50,
+//    "health": 200,
+//    "type": "Damage dealer",
+//    "strength": 40,
+//    "armour": 30,
+//    "distance": 30,
+//    "maxCells": 10,
+//}
+charsRouter.use('/', function (req, res, next) {
+    WarriorModel.findOne({'name': req.body.name}, function (err, w) {
         if (err) return console.error(err);
-        console.log(warrior);
+
+        PaladinModel.findOne({'name': req.body.name}, function (err, p) {
+            if (err) return console.error(err);
+
+            if (p || w) return next(new Error("already exist"));
+            next();
+        });
     });
+});
+charsRouter.post('/warrior', function (req, res, next ) {
 
-    heroes.push(warriorModule);
-    global.heroes = heroes;
+    var warrior = new WarriorModel(req.body);
 
-    res.status(200).send("created warrior " + warrior);
+    warrior.save(function (err, w) {
+        if(err) return console.error(err);
+        res.status(200).send("created warrior " + w);
+    });
 });
 
-charsRouter.post('/paladin/:charName', function (req, res, next) {
-    var palName = req.params.charName;
-    var palModule = new PaladinModule(palName, 100, 50, 200, 'Tank', 40, 30, 30, 10, "God's scroll")
-    var paladin = new PaladinModel(palModule);
-    paladin.save(function(err, paladin) {
-        if (err) return console.error(err);
-        console.log(paladin);
+//Json object
+//{
+//    "name": "HeroName",
+//    "x": 100,
+//    "y": 50,
+//    "health": 200,
+//    "type": "Damage dealer",
+//    "strength": 40,
+//    "armour": 30,
+//    "distance": 30,
+//    "maxCells": 10,
+//    "poison" : {
+//    "number" : 5,
+//        "power" : 7
+//},
+//    "artifact" : "God's scroll"
+//}
+charsRouter.post('/paladin', function (req, res, next) {
+    var paladin = new PaladinModel(req.body);
+
+    paladin.save(function (err, p) {
+        if(err) return console.error(err);
+        res.status(200).send("created paladin " + p);
     });
-
-    heroes.push(palModule);
-    global.heroes = heroes;
-
-    res.status(200).send("created paladin " + paladin);
 });
 
 module.exports = charsRouter;

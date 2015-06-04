@@ -3,7 +3,6 @@
  */
 var express = require('express');
 var app = express();
-var bodyPars = require('body-parser');
 var mongoose = require('mongoose');
 var url = 'mongodb://localhost/game';
 
