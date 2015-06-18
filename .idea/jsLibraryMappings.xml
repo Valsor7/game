@@ -5,6 +5,5 @@
     <file url="PROJECT" libraries="{Node.js v0.12.2 Core Modules}" />
     <includedPredefinedLibrary name="Node.js Globals" />
     <excludedPredefinedLibrary name="HTML" />
-    <excludedPredefinedLibrary name="HTML5 / EcmaScript 5" />
   </component>
 </project>

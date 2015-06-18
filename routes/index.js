@@ -1,14 +1,15 @@
 /**
  * Created by yaroslav on 02.05.15.
  */
-var bodyParser = require('body-parser');
 var actionRouter = require('./action.js');
-var createRouter = require('./create.js');
-
+var heroRouter = require('./hero.js');
 function main(app) {
 
-    app.use(bodyParser.json());
-    app.use('/create', createRouter);
+    app.get('/', function (req, res, next) {
+        res.status(200).send('js Game');
+    });
+
+    app.use('/hero', heroRouter);
 
     app.use('/action', actionRouter);
 

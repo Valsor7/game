@@ -5,8 +5,8 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var PaladinSchema = new Schema({
-    name : {type: String, required: true},
+var HeroSchema = new Schema({
+    name: {type: String, required: true, unique: true},
     x : Number,
     y : Number,
     health : {type: Number, required: true},
@@ -15,6 +15,8 @@ var PaladinSchema = new Schema({
     armour : {type: Number, default: 0},
     distance : {type: Number, required: true},
     maxCells : {type: Number, required: true},
+    way : [],
+    turn : Number,
     poison : {
         number: {type: Number},
         power : {type: Number}
@@ -22,17 +24,18 @@ var PaladinSchema = new Schema({
     artifact : String
 });
 
-PaladinSchema.methods.moveTo = function (way, turn) {
-
+HeroSchema.methods.moveTo = function (way, turn) {
     var length = way.length;
     var finalPos;
-    var isEnd = false
-    length -= turn === 0 ? 0 : this.maxCells*(turn);
+    var isEnd = false;
+    length -= this.maxCells*(turn);
 
     if(length <= this.maxCells){
-        finalPos = way[way.length-1];
-        this.x = finalPos.x;
-        this.y = finalPos.y;
+        if(length>0) {
+            finalPos = way[way.length - 1];
+            this.x = finalPos.x;
+            this.y = finalPos.y;
+        }
         isEnd = true;
         console.log(this.name + " moved to final " + this.x + "_" + this.y);
 
@@ -48,22 +51,23 @@ PaladinSchema.methods.moveTo = function (way, turn) {
     }
 };
 
-PaladinSchema.methods.fight = function (enemy) {
+HeroSchema.methods.fight = function (enemy) {
 
     enemy.health-= this.strength-enemy.armour>0  ? this.strength-enemy.armour: 0;
 
     enemy.armour -= enemy.armour>0 ? this.strength/4: 0;
-    enemy.armour<0 ? enemy.armour=0: 0;
+
+    if(enemy.armour<0) enemy.armour=0;
 
 
-    if(this.poison.number>0){
-        enemy.health-= this.poison.power;
-        --this.poison.number;
+    if(this.poison){
+        if(this.poison.number > 0) {
+            enemy.health -= this.poison.power;
+            --this.poison.number;
+        }
     }
 
     console.log(this.name + ' attacked ' + enemy.name);
 };
 
-var Paladin = mongoose.model('paladin', PaladinSchema);
-
-module.exports = Paladin;
+module.exports = mongoose.model('hero', HeroSchema);
